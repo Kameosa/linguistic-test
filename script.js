@@ -1,99 +1,59 @@
-// ==========================
-// НАСТРОЙКА СТИМУЛОВ
-// ==========================
+// === ПОДСТАВЬ свой URL Google Form ===
+const FORM_URL = "https://docs.google.com/forms/d/1tGCH17Gp0V44PwnWaEG8nf0RQzlZngtSXYxgslQAG9o/preview
+"; 
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBDQ3AVo7CMEHCM5hOQfZx_ROBPvFAbZV6tfJOGJbTaRdhizvX--JGiyaAXBtI7kMRzw/exec"; // твой Apps Script
+
+// === Список стимулов ===
 const words = [
   { text: "акари", vowels: [1, 3, 5], audio: "audio/akari.wav" },
   { text: "сакура", vowels: [1, 3, 5], audio: "audio/sakura.wav" }
 ];
 
-// ==========================
-// GOOGLE SHEETS (твой URL)
-// ==========================
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBDQ3AVo7CMEHCM5hOQfZx_ROBPvFAbZV6tfJOGJbTaRdhizvX--JGiyaAXBtI7kMRzw/exec";
-
-// ==========================
-// СОСТОЯНИЕ ЭКСПЕРИМЕНТА
-// ==========================
 let current = 0;
 let audio;
-let participant = {}; // сюда запишем анкету
+let participant = "";
 
-// ==========================
-// DOM‑элементы
-// ==========================
-const formScreen = document.getElementById("form-screen");
-const formSubmit = document.getElementById("form-submit");
+// ==== Элементы ====
+const welcome = document.getElementById("welcome-screen");
+const startBtn = document.getElementById("start-btn");
+const formBtn = document.getElementById("open-form-btn");
 const app = document.getElementById("app");
 const wordEl = document.getElementById("word");
-const audioBtn = document.getElementById("audio-btn");
 const progressEl = document.getElementById("progress");
+const audioBtn = document.getElementById("audio-btn");
 
-// ==========================
-// Запуск эксперимента
-// ==========================
-formSubmit.addEventListener("click", () => {
-  const gender = document.getElementById("gender").value;
-  const age = document.getElementById("age").value;
-  const native = document.getElementById("native").checked ? "да" : "нет";
-  const pid = document.getElementById("participant-id").value.trim();
-  const consent = document.getElementById("consent").checked ? "да" : "нет";
+// === Открыть анкету ===
+formBtn.addEventListener("click", () => window.open(FORM_URL, "_blank"));
 
-  if (consent !== "да") {
-    alert("Чтобы начать исследование, необходимо дать согласие на участие.");
+// === Начать тест ===
+startBtn.addEventListener("click", () => {
+  participant = prompt("Введите свой идентификатор участника (такой же, как в анкете):", "");
+  if (!participant) {
+    alert("Пожалуйста, введите идентификатор участника!");
     return;
   }
-  if (!gender || !age) {
-    alert("Пожалуйста, выберите пол и возраст.");
-    return;
-  }
-
-  participant = { id: pid || "аноним", gender, age, native, consent };
-
-  // 📤 Отправляем анкету (используем обычный POST без no-cors)
-fetch(SHEET_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    participant: participant.id,
-    gender: participant.gender,
-    age: participant.age,
-    native: participant.native,
-    consent: participant.consent
-  })
-})
-.then(response => response.text())
-.then(text => console.log("Ответ сервера:", text))
-.catch(err => console.error("Ошибка отправки анкеты:", err));
-
-
-  formScreen.style.display = "none";
+  welcome.style.display = "none";
   app.style.display = "block";
   loadWord(current);
 });
 
-
-
-// ==========================
-// Основные функции
-// ==========================
-function loadWord(index) {
-  const w = words[index];
-  progressEl.textContent = `Слово ${index + 1} из ${words.length}`;
+function loadWord(i) {
+  const w = words[i];
+  progressEl.textContent = `Слово ${i + 1} из ${words.length}`;
   wordEl.innerHTML = "";
 
-  w.text.split("").forEach((char, i) => {
+  w.text.split("").forEach((c, j) => {
     const span = document.createElement("span");
-    span.textContent = char;
+    span.textContent = c;
     span.classList.add("syllable");
 
-    if (w.vowels.includes(i + 1)) {
+    if (w.vowels.includes(j + 1)) {
       const marker = document.createElement("div");
       marker.classList.add("marker");
-      marker.textContent = w.vowels.indexOf(i + 1) + 1;
-      marker.addEventListener("click", () => chooseStress(w.vowels.indexOf(i + 1) + 1));
+      marker.textContent = w.vowels.indexOf(j + 1) + 1;
+      marker.addEventListener("click", () => chooseStress(w.vowels.indexOf(j + 1) + 1));
       span.appendChild(marker);
     }
-
     wordEl.appendChild(span);
   });
 
@@ -103,42 +63,33 @@ function loadWord(index) {
 function playAudio(src) {
   if (audio) audio.pause();
   audio = new Audio(src);
-  audio.play().catch(err => console.warn("Автоматическое воспроизведение заблокировано:", err));
+  audio.play();
 }
 
 function chooseStress(num) {
   document.querySelectorAll(".marker").forEach(m => m.classList.remove("selected"));
   document.querySelectorAll(".marker")[num - 1].classList.add("selected");
 
-  const word = words[current].text;
-  console.log(`Участник ${participant.id}: слог ${num} для слова "${word}"`);
-
-  // 📤 сохраняем в таблицу
   fetch(SHEET_URL, {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      timestamp: new Date().toISOString(),
-      participant: participant.id,
-      gender: participant.gender,
-      age: participant.age,
-      native: participant.native,
-      word: word,
+      participant: participant,
+      word: words[current].text,
       stress: num
     })
   });
 
-  setTimeout(nextWord, 1200);
+  setTimeout(nextWord, 1000);
 }
 
 function nextWord() {
   current++;
-  if (current < words.length) {
-    loadWord(current);
-  } else {
-    progressEl.textContent = "Эксперимент завершён.";
-    wordEl.innerHTML = "<h2>Спасибо за участие!</h2>";
+  if (current < words.length) loadWord(current);
+  else {
+    progressEl.textContent = "Эксперимент завершён. Спасибо!";
+    wordEl.innerHTML = "";
     audioBtn.style.display = "none";
   }
 }
