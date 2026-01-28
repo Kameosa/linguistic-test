@@ -2,26 +2,27 @@
 // НАСТРОЙКА СТИМУЛОВ
 // ==========================
 const words = [
-  {
-    text: "акари",
-    vowels: [1, 3, 5], // позиции гласных (а, а, и)
-    audio: "audio/Sakura.mp4"
-  },
-  {
-    text: "сакура",
-    vowels: [1, 3, 5], // (а, у, а)
-    audio: "audio/Sakura.wav"
-  }
+  { text: "акари", vowels: [1, 3, 5], audio: "audio/akari.wav" },
+  { text: "сакура", vowels: [1, 3, 5], audio: "audio/sakura.wav" }
 ];
 
-let current = 0;
-let audio;
+// ==========================
+// GOOGLE SHEETS (твой URL)
+// ==========================
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBDQ3AVo7CMEHCM5hOQfZx_ROBPvFAbZV6tfJOGJbTaRdhizvX--JGiyaAXBtI7kMRzw/exec";
 
 // ==========================
-// DOM-элементы
+// СОСТОЯНИЕ ЭКСПЕРИМЕНТА
 // ==========================
-const startScreen = document.getElementById("start-screen");
-const startBtn = document.getElementById("start-btn");
+let current = 0;
+let audio;
+let participant = {}; // сюда запишем анкету
+
+// ==========================
+// DOM‑элементы
+// ==========================
+const formScreen = document.getElementById("form-screen");
+const formSubmit = document.getElementById("form-submit");
 const app = document.getElementById("app");
 const wordEl = document.getElementById("word");
 const audioBtn = document.getElementById("audio-btn");
@@ -30,8 +31,20 @@ const progressEl = document.getElementById("progress");
 // ==========================
 // Запуск эксперимента
 // ==========================
-startBtn.addEventListener("click", () => {
-  startScreen.style.display = "none";
+formSubmit.addEventListener("click", () => {
+  const gender = document.getElementById("gender").value;
+  const age = document.getElementById("age").value;
+  const native = document.getElementById("native").checked ? "да" : "нет";
+  const pid = document.getElementById("participant-id").value.trim();
+
+  if (!gender || !age) {
+    alert("Пожалуйста, заполните пол и возраст");
+    return;
+  }
+
+  participant = { id: pid || "аноним", gender, age, native };
+
+  formScreen.style.display = "none";
   app.style.display = "block";
   loadWord(current);
 });
@@ -44,17 +57,15 @@ function loadWord(index) {
   progressEl.textContent = `Слово ${index + 1} из ${words.length}`;
   wordEl.innerHTML = "";
 
-  // создаем буквы и маркеры
   w.text.split("").forEach((char, i) => {
     const span = document.createElement("span");
     span.textContent = char;
     span.classList.add("syllable");
 
-    // если буква — гласная (по позиции из списка)
     if (w.vowels.includes(i + 1)) {
       const marker = document.createElement("div");
       marker.classList.add("marker");
-      marker.textContent = w.vowels.indexOf(i + 1) + 1; // 1, 2, 3...
+      marker.textContent = w.vowels.indexOf(i + 1) + 1;
       marker.addEventListener("click", () => chooseStress(w.vowels.indexOf(i + 1) + 1));
       span.appendChild(marker);
     }
@@ -68,16 +79,31 @@ function loadWord(index) {
 function playAudio(src) {
   if (audio) audio.pause();
   audio = new Audio(src);
-  audio.play().catch(err => {
-    console.warn("Автоматическое воспроизведение заблокировано:", err);
-  });
+  audio.play().catch(err => console.warn("Автоматическое воспроизведение заблокировано:", err));
 }
 
 function chooseStress(num) {
   document.querySelectorAll(".marker").forEach(m => m.classList.remove("selected"));
   document.querySelectorAll(".marker")[num - 1].classList.add("selected");
 
-  console.log(`Выбран ${num}-й слог в слове "${words[current].text}"`);
+  const word = words[current].text;
+  console.log(`Участник ${participant.id}: слог ${num} для слова "${word}"`);
+
+  // 📤 сохраняем в таблицу
+  fetch(SHEET_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      timestamp: new Date().toISOString(),
+      participant: participant.id,
+      gender: participant.gender,
+      age: participant.age,
+      native: participant.native,
+      word: word,
+      stress: num
+    })
+  });
 
   setTimeout(nextWord, 1200);
 }
@@ -93,27 +119,4 @@ function nextWord() {
   }
 }
 
-audioBtn.addEventListener("click", () => {
-  if (audio) audio.play();
-});
-
-// ТВОЙ URL из Google Apps Script
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBDQ3AVo7CMEHCM5hOQfZx_ROBPvFAbZV6tfJOGJbTaRdhizvX--JGiyaAXBtI7kMRzw/exec";
-
-function chooseStress(num) {
-  document.querySelectorAll(".marker").forEach(m => m.classList.remove("selected"));
-  document.querySelectorAll(".marker")[num - 1].classList.add("selected");
-
-  const word = words[current].text;
-  console.log(`Выбран ${num}-й слог в слове "${word}"`);
-
-  // 📤 отправляем результат в Google Sheets
-  fetch(SHEET_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ word: word, stress: num })
-  });
-
-  setTimeout(nextWord, 1200);
-}
+audioBtn.addEventListener("click", () => audio && audio.play());
