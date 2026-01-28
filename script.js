@@ -49,19 +49,22 @@ formSubmit.addEventListener("click", () => {
 
   participant = { id: pid || "аноним", gender, age, native, consent };
 
-  // 📤 Отправляем анкету в таблицу сразу после заполнения
-  fetch(SHEET_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      participant: participant.id,
-      gender: participant.gender,
-      age: participant.age,
-      native: participant.native,
-      consent: participant.consent
-    })
-  });
+  // 📤 Отправляем анкету (используем обычный POST без no-cors)
+fetch(SHEET_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    participant: participant.id,
+    gender: participant.gender,
+    age: participant.age,
+    native: participant.native,
+    consent: participant.consent
+  })
+})
+.then(response => response.text())
+.then(text => console.log("Ответ сервера:", text))
+.catch(err => console.error("Ошибка отправки анкеты:", err));
+
 
   formScreen.style.display = "none";
   app.style.display = "block";
