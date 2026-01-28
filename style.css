@@ -1,0 +1,66 @@
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  text-align: center;
+  background-color: #fafafa;
+  color: #222;
+  margin: 0;
+  padding: 40px;
+}
+
+#progress {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.word-container {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+#word {
+  font-size: 64px;
+  font-weight: bold;
+  letter-spacing: 6px;
+}
+
+#markers {
+  margin-top: 10px;
+}
+
+.marker {
+  display: inline-block;
+  font-size: 24px;
+  padding: 5px 10px;
+  margin: 0 10px;
+  border: 2px solid #888;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.marker:hover {
+  background-color: #eee;
+}
+
+.marker.selected {
+  background-color: #ff5252;
+  border-color: #ff0000;
+  color: white;
+  transform: scale(1.1);
+}
+
+.controls button {
+  font-size: 18px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #3498db;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.controls button:hover {
+  background-color: #2980b9;
+}
