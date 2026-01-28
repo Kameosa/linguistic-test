@@ -7,16 +7,20 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
+  <div id="start-screen">
+    <h1>Тест на восприятие ударений</h1>
+    <p>Нажмите кнопку, чтобы начать и разрешить воспроизведение звука.</p>
+    <button id="start-btn">Начать</button>
+  </div>
+
+  <div id="app" style="display:none;">
     <div id="progress"></div>
-    
     <div class="word-container">
       <div id="word"></div>
       <div id="markers"></div>
     </div>
-
     <div class="controls">
-      <button id="audio-btn" title="Прослушать ещё раз">🔈 Прослушать ещё раз</button>
+      <button id="audio-btn" title="Прослушать ещё раз">🔈 Прослушать</button>
     </div>
   </div>
 
