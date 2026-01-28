@@ -1,43 +1,41 @@
-// =============================
-// Настройка списка стимулов
-// =============================
 const words = [
   {
-    text: "акари",            // можно и латиницей — "akari"
-    vowelsCount: 3,            // число гласных (слогов)
-    audio: "akari.wav"   // путь к файлу
+    text: "あかり",
+    vowelsCount: 3,
+    audio: "audio/akari.wav"
   },
   {
-    text: "сакура",
+    text: "さくら",
     vowelsCount: 3,
-    audio: "sakura.wav"
+    audio: "audio/sakura.wav"
   }
 ];
 
-// =============================
-// Глобальные переменные
-// =============================
 let current = 0;
 let audio;
 
-// =============================
-// DOM-элементы
-// =============================
+const startScreen = document.getElementById("start-screen");
+const startBtn = document.getElementById("start-btn");
+const app = document.getElementById("app");
 const wordEl = document.getElementById("word");
 const markersEl = document.getElementById("markers");
 const audioBtn = document.getElementById("audio-btn");
 const progressEl = document.getElementById("progress");
 
-// =============================
-// Функции
-// =============================
+// старт эксперимента
+startBtn.addEventListener("click", () => {
+  startScreen.style.display = "none";
+  app.style.display = "block";
+  loadWord(current);
+});
+
 function loadWord(index) {
   const w = words[index];
   progressEl.textContent = `Слово ${index + 1} из ${words.length}`;
   wordEl.textContent = w.text;
   markersEl.innerHTML = "";
 
-  // создаем кликабельные маркеры над гласными
+  // создаем маркеры
   for (let i = 1; i <= w.vowelsCount; i++) {
     const marker = document.createElement("span");
     marker.textContent = i;
@@ -52,19 +50,18 @@ function loadWord(index) {
 function playAudio(src) {
   if (audio) audio.pause();
   audio = new Audio(src);
-  audio.play();
+  audio.play().catch(err => {
+    console.warn("Автоматическое воспроизведение заблокировано:", err);
+  });
 }
 
 function chooseStress(pos) {
-  // подсветить выбранный элемент
   document.querySelectorAll(".marker").forEach(m => m.classList.remove("selected"));
   const selected = document.querySelector(`.marker:nth-child(${pos})`);
   selected.classList.add("selected");
 
-  // записать результат (здесь просто в консоль)
   console.log(`Выбран слог ${pos} для слова "${words[current].text}"`);
 
-  // задержка перед переходом к следующему слову
   setTimeout(nextWord, 1200);
 }
 
@@ -80,12 +77,6 @@ function nextWord() {
   }
 }
 
-// событие на кнопку "прослушать"
 audioBtn.addEventListener("click", () => {
   if (audio) audio.play();
 });
-
-// автозапуск при загрузке страницы
-window.onload = () => {
-  loadWord(current);
-};
