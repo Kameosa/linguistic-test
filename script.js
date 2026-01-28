@@ -1,12 +1,15 @@
+// ==========================
+// НАСТРОЙКА СТИМУЛОВ
+// ==========================
 const words = [
   {
-    text: "あかり",
-    vowelsCount: 3,
+    text: "акари",
+    vowels: [1, 3, 5], // позиции гласных (а, а, и)
     audio: "audio/akari.wav"
   },
   {
-    text: "さくら",
-    vowelsCount: 3,
+    text: "сакура",
+    vowels: [1, 3, 5], // (а, у, а)
     audio: "audio/sakura.wav"
   }
 ];
@@ -14,35 +17,50 @@ const words = [
 let current = 0;
 let audio;
 
+// ==========================
+// DOM-элементы
+// ==========================
 const startScreen = document.getElementById("start-screen");
 const startBtn = document.getElementById("start-btn");
 const app = document.getElementById("app");
 const wordEl = document.getElementById("word");
-const markersEl = document.getElementById("markers");
 const audioBtn = document.getElementById("audio-btn");
 const progressEl = document.getElementById("progress");
 
-// старт эксперимента
+// ==========================
+// Запуск эксперимента
+// ==========================
 startBtn.addEventListener("click", () => {
   startScreen.style.display = "none";
   app.style.display = "block";
   loadWord(current);
 });
 
+// ==========================
+// Основные функции
+// ==========================
 function loadWord(index) {
   const w = words[index];
   progressEl.textContent = `Слово ${index + 1} из ${words.length}`;
-  wordEl.textContent = w.text;
-  markersEl.innerHTML = "";
+  wordEl.innerHTML = "";
 
-  // создаем маркеры
-  for (let i = 1; i <= w.vowelsCount; i++) {
-    const marker = document.createElement("span");
-    marker.textContent = i;
-    marker.classList.add("marker");
-    marker.addEventListener("click", () => chooseStress(i));
-    markersEl.appendChild(marker);
-  }
+  // создаем буквы и маркеры
+  w.text.split("").forEach((char, i) => {
+    const span = document.createElement("span");
+    span.textContent = char;
+    span.classList.add("syllable");
+
+    // если буква — гласная (по позиции из списка)
+    if (w.vowels.includes(i + 1)) {
+      const marker = document.createElement("div");
+      marker.classList.add("marker");
+      marker.textContent = w.vowels.indexOf(i + 1) + 1; // 1, 2, 3...
+      marker.addEventListener("click", () => chooseStress(w.vowels.indexOf(i + 1) + 1));
+      span.appendChild(marker);
+    }
+
+    wordEl.appendChild(span);
+  });
 
   playAudio(w.audio);
 }
@@ -55,12 +73,11 @@ function playAudio(src) {
   });
 }
 
-function chooseStress(pos) {
+function chooseStress(num) {
   document.querySelectorAll(".marker").forEach(m => m.classList.remove("selected"));
-  const selected = document.querySelector(`.marker:nth-child(${pos})`);
-  selected.classList.add("selected");
+  document.querySelectorAll(".marker")[num - 1].classList.add("selected");
 
-  console.log(`Выбран слог ${pos} для слова "${words[current].text}"`);
+  console.log(`Выбран ${num}-й слог в слове "${words[current].text}"`);
 
   setTimeout(nextWord, 1200);
 }
@@ -70,9 +87,8 @@ function nextWord() {
   if (current < words.length) {
     loadWord(current);
   } else {
-    wordEl.textContent = "Спасибо за участие!";
-    markersEl.innerHTML = "";
     progressEl.textContent = "Эксперимент завершён.";
+    wordEl.innerHTML = "<h2>Спасибо за участие!</h2>";
     audioBtn.style.display = "none";
   }
 }
