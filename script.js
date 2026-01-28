@@ -22,7 +22,10 @@ const progressEl = document.getElementById("progress");
 const audioBtn = document.getElementById("audio-btn");
 
 // === Открыть анкету ===
-formBtn.addEventListener("click", () => window.open(FORM_URL, "_blank"));
+formBtn.addEventListener("click", () => {
+  console.log("Открываю форму:", FORM_URL);
+  window.open(FORM_URL, "_blank");
+});
 
 // === Начать тест ===
 startBtn.addEventListener("click", () => {
