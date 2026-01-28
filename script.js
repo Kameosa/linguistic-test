@@ -96,3 +96,24 @@ function nextWord() {
 audioBtn.addEventListener("click", () => {
   if (audio) audio.play();
 });
+
+// ТВОЙ URL из Google Apps Script
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBDQ3AVo7CMEHCM5hOQfZx_ROBPvFAbZV6tfJOGJbTaRdhizvX--JGiyaAXBtI7kMRzw/exec";
+
+function chooseStress(num) {
+  document.querySelectorAll(".marker").forEach(m => m.classList.remove("selected"));
+  document.querySelectorAll(".marker")[num - 1].classList.add("selected");
+
+  const word = words[current].text;
+  console.log(`Выбран ${num}-й слог в слове "${word}"`);
+
+  // 📤 отправляем результат в Google Sheets
+  fetch(SHEET_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ word: word, stress: num })
+  });
+
+  setTimeout(nextWord, 1200);
+}
