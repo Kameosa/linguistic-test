@@ -5,12 +5,12 @@ const words = [
   {
     text: "акари",            // можно и латиницей — "akari"
     vowelsCount: 3,            // число гласных (слогов)
-    audio: "akari.m4a"   // путь к файлу
+    audio: "akari.wav"   // путь к файлу
   },
   {
     text: "сакура",
     vowelsCount: 3,
-    audio: "sakura.m4a"
+    audio: "sakura.wav"
   }
 ];
 
