@@ -91,3 +91,19 @@ body {
 .controls button:hover {
   background-color: #2980b9;
 }
+
+.consent-text {
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #f3f6f9;
+  border-left: 4px solid #3498db;
+  padding: 15px 20px;
+  border-radius: 6px;
+}
+
+.consent-label {
+  font-weight: 500;
+}
