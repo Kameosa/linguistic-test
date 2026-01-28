@@ -10,7 +10,7 @@ const words = [
   {
     text: "сакура",
     vowels: [1, 3, 5], // (а, у, а)
-    audio: "audio/sakura.wav"
+    audio: "audio/Sakura.wav"
   }
 ];
 
