@@ -1,6 +1,5 @@
 // === ПОДСТАВЬ свой URL Google Form ===
-const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeb7aZPzETSR3Uzp3K99XZ2OeFYK7B8yM6XKHWlgIUBy4p75w/viewform?usp=publish-editor
-"; 
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeb7aZPzETSR3Uzp3K99XZ2OeFYK7B8yM6XKHWlgIUBy4p75w/viewform"; 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBDQ3AVo7CMEHCM5hOQfZx_ROBPvFAbZV6tfJOGJbTaRdhizvX--JGiyaAXBtI7kMRzw/exec"; // твой Apps Script
 
 // === Список стимулов ===
