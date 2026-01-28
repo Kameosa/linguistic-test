@@ -36,24 +36,38 @@ formSubmit.addEventListener("click", () => {
   const age = document.getElementById("age").value;
   const native = document.getElementById("native").checked ? "да" : "нет";
   const pid = document.getElementById("participant-id").value.trim();
-  const consent = document.getElementById("consent").checked;
+  const consent = document.getElementById("consent").checked ? "да" : "нет";
 
-  if (!consent) {
+  if (consent !== "да") {
     alert("Чтобы начать исследование, необходимо дать согласие на участие.");
     return;
   }
-
   if (!gender || !age) {
     alert("Пожалуйста, выберите пол и возраст.");
     return;
   }
 
-  participant = { id: pid || "аноним", gender, age, native, consent: "да" };
+  participant = { id: pid || "аноним", gender, age, native, consent };
+
+  // 📤 Отправляем анкету в таблицу сразу после заполнения
+  fetch(SHEET_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      participant: participant.id,
+      gender: participant.gender,
+      age: participant.age,
+      native: participant.native,
+      consent: participant.consent
+    })
+  });
 
   formScreen.style.display = "none";
   app.style.display = "block";
   loadWord(current);
 });
+
 
 
 // ==========================
