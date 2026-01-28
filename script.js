@@ -3,12 +3,12 @@
 // =============================
 const words = [
   {
-    text: "あかり",            // можно и латиницей — "akari"
+    text: "акари",            // можно и латиницей — "akari"
     vowelsCount: 3,            // число гласных (слогов)
     audio: "audio/word1.mp3"   // путь к файлу
   },
   {
-    text: "さくら",
+    text: "сакура",
     vowelsCount: 3,
     audio: "audio/word2.mp3"
   }
