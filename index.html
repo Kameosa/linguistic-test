@@ -9,38 +9,53 @@
 <body>
 
   <!-- 🧍 Анкета -->
-  <div id="form-screen">
-    <h1>Анкета участника</h1>
+<!-- 🧍 Анкета -->
+<div id="form-screen">
+  <h1>Анкета участника</h1>
 
-    <label for="participant-id">Идентификатор участника:</label><br>
-    <input type="text" id="participant-id" placeholder="Введите ID (или оставьте пустым)"><br><br>
+  <p class="consent-text">
+    Уважаемые участники!  
+    Исследование посвящено тому, как носители русского языка
+    воспринимают ударение в японских словах.  
+    Участие добровольное, результаты анонимны и будут использоваться
+    только в научных целях.
+  </p>
 
-    <label>Пол:</label><br>
-    <select id="gender">
-      <option value="">Выберите...</option>
-      <option value="м">Мужской</option>
-      <option value="ж">Женский</option>
-    </select><br><br>
+  <label for="participant-id">Идентификатор участника:</label><br>
+  <input type="text" id="participant-id" placeholder="Введите ID (или оставьте пустым)"><br><br>
 
-    <label>Возраст:</label><br>
-    <select id="age">
-      <option value="">Выберите...</option>
-      <option value="10-19">10–19</option>
-      <option value="20-29">20–29</option>
-      <option value="30-39">30–39</option>
-      <option value="40-49">40–49</option>
-      <option value="50-59">50–59</option>
-      <option value="60-69">60–69</option>
-      <option value="70-79">70–79</option>
-      <option value="80+">80+</option>
-    </select><br><br>
+  <label>Пол:</label><br>
+  <select id="gender">
+    <option value="">Выберите...</option>
+    <option value="м">Мужской</option>
+    <option value="ж">Женский</option>
+  </select><br><br>
 
-    <label>
-      <input type="checkbox" id="native"> Являюсь носителем русского языка
-    </label><br><br>
+  <label>Возраст:</label><br>
+  <select id="age">
+    <option value="">Выберите...</option>
+    <option value="10-19">10–19</option>
+    <option value="20-29">20–29</option>
+    <option value="30-39">30–39</option>
+    <option value="40-49">40–49</option>
+    <option value="50-59">50–59</option>
+    <option value="60-69">60–69</option>
+    <option value="70-79">70–79</option>
+    <option value="80+">80+</option>
+  </select><br><br>
 
-    <button id="form-submit">Начать тест</button>
-  </div>
+  <label>
+    <input type="checkbox" id="native"> Являюсь носителем русского языка
+  </label><br><br>
+
+  <label class="consent-label">
+    <input type="checkbox" id="consent">
+    Я даю согласие на участие в исследовании и обработку моих ответов
+  </label><br><br>
+
+  <button id="form-submit">Начать тест</button>
+</div>
+
 
   <!-- 🎧 Эксперимент -->
   <div id="app" style="display:none;">
