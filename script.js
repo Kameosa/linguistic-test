@@ -36,18 +36,25 @@ formSubmit.addEventListener("click", () => {
   const age = document.getElementById("age").value;
   const native = document.getElementById("native").checked ? "да" : "нет";
   const pid = document.getElementById("participant-id").value.trim();
+  const consent = document.getElementById("consent").checked;
 
-  if (!gender || !age) {
-    alert("Пожалуйста, заполните пол и возраст");
+  if (!consent) {
+    alert("Чтобы начать исследование, необходимо дать согласие на участие.");
     return;
   }
 
-  participant = { id: pid || "аноним", gender, age, native };
+  if (!gender || !age) {
+    alert("Пожалуйста, выберите пол и возраст.");
+    return;
+  }
+
+  participant = { id: pid || "аноним", gender, age, native, consent: "да" };
 
   formScreen.style.display = "none";
   app.style.display = "block";
   loadWord(current);
 });
+
 
 // ==========================
 // Основные функции
