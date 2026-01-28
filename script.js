@@ -2,17 +2,16 @@
 // НАСТРОЙКА СТИМУЛОВ
 // ==========================
 const words = [
-
- {
-    text: "сакура",
-    vowels: [1, 3, 5], // (а, у, а)
-    audio: "audio/sakura.wav"
-  }
-   {
+  {
     text: "акари",
     vowels: [1, 3, 5], // позиции гласных (а, а, и)
-    audio: "audio/akari.wav"
+    audio: "audio/akari.mp3"
   },
+  {
+    text: "сакура",
+    vowels: [1, 3, 5], // (а, у, а)
+    audio: "audio/sakura.mp3"
+  }
 ];
 
 let current = 0;
