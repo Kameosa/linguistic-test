@@ -5,7 +5,7 @@ const words = [
   {
     text: "акари",
     vowels: [1, 3, 5], // позиции гласных (а, а, и)
-    audio: "audio/akari.wav"
+    audio: "audio/Sakura.mp4"
   },
   {
     text: "сакура",
