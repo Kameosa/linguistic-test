@@ -44,7 +44,6 @@ startBtn.addEventListener("click", () => {
     .catch(err => console.error("Ошибка получения ID:", err));
 });
 
-  }
   welcome.style.display = "none";
   app.style.display = "block";
   loadWord(current);
