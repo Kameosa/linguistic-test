@@ -29,10 +29,19 @@ formBtn.addEventListener("click", () => {
 
 // === Начать тест ===
 startBtn.addEventListener("click", () => {
-  participant = prompt("Введите свой идентификатор участника (такой же, как в анкете):", "");
-  if (!participant) {
-    alert("Пожалуйста, введите идентификатор участника!");
-    return;
+  participant = startBtn.addEventListener("click", () => {
+  fetch(SHEET_URL)                // тот же адрес, что и для POST
+    .then(res => res.json())
+    .then(data => {
+      participant = data.id;
+      alert("Ваш идентификатор участника: " + participant);
+      welcome.style.display = "none";
+      app.style.display = "block";
+      loadWord(current);
+    })
+    .catch(err => console.error("Ошибка получения ID:", err));
+});
+
   }
   welcome.style.display = "none";
   app.style.display = "block";
