@@ -1,6 +1,6 @@
 // === ПОДСТАВЬ свой URL Google Form ===
-const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeb7aZPzETSR3Uzp3K99XZ2OeFYK7B8yM6XKHWlgIUBy4p75w/viewform"; 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBDQ3AVo7CMEHCM5hOQfZx_ROBPvFAbZV6tfJOGJbTaRdhizvX--JGiyaAXBtI7kMRzw/exec"; // твой Apps Script
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeb7aZPzETSR3Uzp3K99XZ2OeFYK7B8yM6XKHWlgIUBy4p75w/viewform";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBDQ3AVo7CMEHCM5hOQfZx_ROBPvFAbZV6tfJOGJbTaRdhizvX--JGiyaAXBtI7kMRzw/exec";
 
 // === Список стимулов ===
 const words = [
@@ -14,8 +14,8 @@ let participant = "";
 
 // ==== Элементы ====
 const welcome = document.getElementById("welcome-screen");
-const startBtn = document.getElementById("start-btn");
 const formBtn = document.getElementById("open-form-btn");
+const startBtn = document.getElementById("start-btn");
 const app = document.getElementById("app");
 const wordEl = document.getElementById("word");
 const progressEl = document.getElementById("progress");
@@ -41,13 +41,13 @@ startBtn.addEventListener("click", () => {
       app.style.display = "block";
       loadWord(current);
     })
-    .catch(err => console.error("Ошибка получения ID:", err));
+    .catch(err => {
+      console.error("Ошибка получения ID:", err);
+      alert("Не удалось получить идентификатор. Проверь соединение или ссылку на Apps Script.");
+    });
 });
 
-  welcome.style.display = "none";
-  app.style.display = "block";
-  loadWord(current);
-});
+// === === ФУНКЦИИ ЭКСПЕРИМЕНТА === ===
 
 function loadWord(i) {
   const w = words[i];
@@ -98,12 +98,15 @@ function chooseStress(num) {
 
 function nextWord() {
   current++;
-  if (current < words.length) loadWord(current);
-  else {
+  if (current < words.length) {
+    loadWord(current);
+  } else {
     progressEl.textContent = "Эксперимент завершён. Спасибо!";
     wordEl.innerHTML = "";
     audioBtn.style.display = "none";
   }
 }
 
-audioBtn.addEventListener("click", () => audio && audio.play());
+audioBtn.addEventListener("click", () => {
+  if (audio) audio.play();
+});
