@@ -29,12 +29,14 @@ formBtn.addEventListener("click", () => {
 
 // === Начать тест ===
 startBtn.addEventListener("click", () => {
-  participant = startBtn.addEventListener("click", () => {
-  fetch(SHEET_URL)                // тот же адрес, что и для POST
+  // Получаем новый ID автоматически
+  fetch(SHEET_URL)
     .then(res => res.json())
     .then(data => {
       participant = data.id;
       alert("Ваш идентификатор участника: " + participant);
+
+      // После получения ID – запускаем эксперимент
       welcome.style.display = "none";
       app.style.display = "block";
       loadWord(current);
