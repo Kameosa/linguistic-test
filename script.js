@@ -5,7 +5,7 @@ const SHEET_URL = "https://script.google.com/macros/s/AKfycbyBDQ3AVo7CMEHCM5hOQf
 // === Список стимулов ===
 const words = [
   { text: "акари", vowels: [1, 3, 5], audio: "audio/akari.wav" },
-  { text: "сакура", vowels: [1, 3, 5], audio: "audio/sakura.wav" }
+  { text: "сакура", vowels: [2, 4, 6], audio: "audio/sakura.wav" }
 ];
 
 let current = 0;
